@@ -1,0 +1,38 @@
+public class ContaEmpresarial extends Conta implements Pagamento {
+    private String cnpj;
+    private double limiteCredito;
+    private String nomeEmpresa;
+
+    public ContaEmpresarial(String titular, double saldo, String cnpj, String nomeEmpresa, double limite) {
+        super(titular, saldo);
+        this.cnpj = cnpj;
+        this.nomeEmpresa = nomeEmpresa;
+        this.limiteCredito = limite;
+    }
+
+    @Override
+    public void exibirTipoConta() {
+        System.out.println("Tipo: Conta Empresarial (" + nomeEmpresa + ")");
+    }
+
+    @Override
+    public void processarPagamento(double valor, String modalidade) {
+        if (this.status != StatusConta.ATIVA) return;
+
+        boolean validado = false;
+        if (modalidade.equalsIgnoreCase("pix")) validado = valor <= 5000;
+        else if (modalidade.equalsIgnoreCase("cartao")) validado = valor <= 20000;
+        else if (modalidade.equalsIgnoreCase("boleto")) validado = valor > 0;
+
+        if (validado) {
+            double taxa = valor * 0.02;
+            this.saldo -= (valor + taxa);
+            System.out.println("Pagamento Empresa: " + modalidade + " de R$ " + valor + " (Juros: R$ " + taxa + ") realizado.");
+        }
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + " | Empresa: " + nomeEmpresa + " | CNPJ: " + cnpj;
+    }
+}
