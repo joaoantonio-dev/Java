@@ -1,0 +1,32 @@
+public class SistemaPagamentoMain {
+    public static void main(String[] args) {
+        ContaCorrente cc = new ContaCorrente("João Antônio Costa Rodrigues", 10000.0, 1000.0);
+        ContaEmpresarial ce = new ContaEmpresarial("Adm", 50000.0, "12.345.678/0001-99", "Tech Solutions", 100000.0);
+        ContaPoupanca cp = new ContaPoupanca("Fernanda Moraes", 2000.0, 0.005);
+
+        System.out.println("STATUS INICIAL");
+        System.out.println(cc);
+        System.out.println(ce);
+        System.out.println(cp);
+        System.out.println("\n");
+
+        cc.exibirTipoConta();
+        cc.processarPagamento(3000.0, "Pix");
+        
+        ce.exibirTipoConta();
+        ce.processarPagamento(25000.0, "cartao");
+        ce.processarPagamento(15000.0, "cartao");
+        
+        System.out.println("\nTESTE TRANSFERÊNCIA");
+        cp.transferir(cc, 500.0);
+
+        System.out.println("\nTESTE CONTA BLOQUEADA");
+        cc.status = StatusConta.BLOQUEADA;
+        cc.sacar(100.0);
+        
+        System.out.println("\nSTATUS FINAL");
+        System.out.println(cc);
+        System.out.println(ce);
+        System.out.println(cp);
+    }
+}
