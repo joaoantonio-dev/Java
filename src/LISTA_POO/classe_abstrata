@@ -1,0 +1,50 @@
+public abstract class Conta {
+    protected String titular;
+    protected double saldo;
+    protected StatusConta status;
+
+    public Conta(String titular, double saldoInicial) {
+        this.titular = titular;
+        this.saldo = saldoInicial;
+        this.status = StatusConta.ATIVA;
+    }
+
+    public void depositar(double valor) {
+        if (status == StatusConta.ATIVA && valor > 0) {
+            this.saldo += valor;
+            System.out.println("Depósito de R$ " + valor + " realizado. Novo saldo: R$ " + saldo);
+        } else {
+            System.out.println("Operação negada: Conta inativa ou valor inválido.");
+        }
+    }
+
+    public void sacar(double valor) {
+        if (status == StatusConta.ATIVA && valor <= saldo) {
+            this.saldo -= valor;
+            System.out.println("Saque de R$ " + valor + " realizado. Saldo restante: R$ " + saldo);
+        } else {
+            System.out.println("Operação negada: Saldo insuficiente ou conta não está ATIVA.");
+        }
+    }
+
+    public void transferir(Conta destino, double valor) {
+        if (this.status == StatusConta.ATIVA && destino.status == StatusConta.ATIVA) {
+            if (this.saldo >= valor) {
+                this.sacar(valor);
+                destino.depositar(valor);
+                System.out.println("Transferência de R$ " + valor + " para " + destino.titular + " concluída.");
+            } else {
+                System.out.println("Erro: Saldo insuficiente para transferência.");
+            }
+        } else {
+            System.out.println("Erro: Ambas as contas precisam estar ATIVAS para transferência.");
+        }
+    }
+
+    public abstract void exibirTipoConta();
+
+    @Override
+    public String toString() {
+        return "Titular: " + titular + " | Saldo: R$ " + saldo + " | Status: " + status;
+    }
+}
