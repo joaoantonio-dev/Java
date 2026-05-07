@@ -1,0 +1,46 @@
+public class ContaCorrente extends Conta implements Pagamento {
+    private double limiteChequeEspecial;
+
+    public ContaCorrente(String titular, double saldo, double limite) {
+        super(titular, saldo);
+        this.limiteChequeEspecial = limite;
+    }
+
+    @Override
+    public void exibirTipoConta() {
+        System.out.println("Tipo: Conta Corrente");
+    }
+
+    @Override
+    public void processarPagamento(double valor, String modalidade) {
+        if (this.status != StatusConta.ATIVA) {
+            System.out.println("Pagamento não permitido: Conta Inativa.");
+            return;
+        }
+
+        boolean validado = false;
+        switch (modalidade.toLowerCase()) {
+            case "pix" -> validado = valor <= 5000;
+            case "cartao" -> validado = valor <= 20000;
+            case "boleto" -> validado = valor > 0;
+        }
+
+        if (validado) {
+            double taxa = valor * 0.01;
+            double total = valor + taxa;
+            if (this.saldo >= total) {
+                this.saldo -= total;
+                System.out.println("Pagamento " + modalidade + " de R$ " + valor + " (Taxa: R$ " + taxa + ") processado.");
+            } else {
+                System.out.println("Saldo insuficiente para pagar com juros.");
+            }
+        } else {
+            System.out.println("Pagamento negado: Valor fora dos limites da modalidade " + modalidade);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + " | Limite Cheque Especial: R$ " + limiteChequeEspecial;
+    }
+}
